@@ -10,18 +10,31 @@ int main()
     // window dimensions
     const int windowWidth = 512;      // const variable will not change in the program
     const int windowHeight = 380;     // I bet these have to do with the paralaxing image sizes
-    const char * windowTitle = "Lacey's Dapper Dasher Game";
+    const char * windowTitle = "Lacey's Dapper Dasher!";
     // initialize the window
     InitWindow(windowWidth, windowHeight, windowTitle);
 
     // gravity, pixels/frame per frame
     const int gravity{1};
 
-    // rectangle dimensions
-    const int rect_w{50};
-    const int rect_h{80};
+    // texture 2D - scrafy player character
+    Texture2D scarfy = LoadTexture("textures/scarfy.png");
+    Rectangle scarfyRect;       // access variables with .
+    scarfyRect.width = scarfy.width/6;
+    scarfyRect.height = scarfy.height;
+    scarfyRect.x = 0;
+    scarfyRect.y = 0;
+    Vector2 scarfyPos;          // access variables with .
+    scarfyPos.x = windowWidth/2 - scarfyRect.width/2;
+    scarfyPos.y = windowHeight - scarfyRect.height;
+    
 
-    int posY(windowHeight - rect_h);
+
+    // is the rectangle in the air
+    bool isInAir{};
+    // jump velocity
+    const int jumpVelocity{-22};
+
     int velocity{0};
 
     bool collision_with_enemy{};
@@ -41,33 +54,31 @@ int main()
             // Game Logic Start
 
             // perform ground check
-            if ( posY >= (windowHeight - rect_h) )
+            if ( scarfyPos.y >= (windowHeight - scarfyRect.height) )
             {
                 // rectangle is on the ground
                 velocity = 0;
+                isInAir = false;
             }
             else
             {
                 // rectangle is in the air, apply gravity
                 velocity += gravity;
+                isInAir = true;
             }
 
-            // adding jump with SPACE logic
-            if ( IsKeyPressed(KEY_SPACE) )
+            // adding jump with SPACE logic and jump check
+            if ( IsKeyPressed(KEY_SPACE) && !isInAir )
             {
-                // add to the velocity
-                velocity -= 10;
+                // add jumpVelocity to the velocity
+                velocity += jumpVelocity;
             }
-            /*else
-            {
-                velocity = 0;
-            }*/
-
 
             // update position
-            posY += velocity;
+            scarfyPos.y += velocity;
 
-            DrawRectangle(windowWidth/2, posY, rect_w, rect_h, BLUE);
+            // draw scarfy
+            DrawTextureRec(scarfy, scarfyRect, scarfyPos, WHITE);
 
             DrawText("Level: 1", 10, 10, 20, BLUE);
 
@@ -76,5 +87,6 @@ int main()
 
         EndDrawing();
     }
+    UnloadTexture(scarfy);
     CloseWindow();
 }
