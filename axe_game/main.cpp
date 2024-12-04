@@ -112,6 +112,11 @@ int main()
           // move circle down if down key is pressed
           circle_y += circle_s;
         }
+
+        // Level Text
+        DrawText("Level: 1", 10, 10, 20, BLUE);
+        DrawText("Don't let the            touch you!", width-345, height-35, 20, ORANGE);
+        DrawText("Red Axe", width-207, height-35, 20, RED);
       }
 
       
