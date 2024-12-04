@@ -13,7 +13,7 @@ int main()
     // Window variables
     int width = 800;  // could use bracket initalization
     int height = 450; // int height{200};
-    const char * windowTitle = "Lacey's Popup!";
+    const char * windowTitle = "Lacey's Axe Game";
     // Initialize the window
     InitWindow(width, height, windowTitle);
 
