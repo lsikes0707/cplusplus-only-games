@@ -14,10 +14,10 @@ int main()
     // initialize the window
     InitWindow(windowWidth, windowHeight, windowTitle);
 
-    // gravity, pixels/frame per frame
-    const int gravity{1};
+    // gravity, pixels/s per s
+    const int gravity{1'000};
 
-    // texture 2D - scrafy player character
+    // texture 2D - scarfy player character
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
     Rectangle scarfyRect;       // access variables with .
     scarfyRect.width = scarfy.width/6;
@@ -27,13 +27,30 @@ int main()
     Vector2 scarfyPos;          // access variables with .
     scarfyPos.x = windowWidth/2 - scarfyRect.width/2;
     scarfyPos.y = windowHeight - scarfyRect.height;
+
+    // texture 2D - nebula hazard
+    Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
+    Rectangle nebRect;
+    nebRect.x = 0;
+    nebRect.y = 0;
+    nebRect.width = nebula.width/8;
+    nebRect.height = nebula.height/8;
+    Vector2 nebPos{windowWidth, windowHeight-nebRect.height};
     
+    // nebula x velocity (pixels/second)
+    int nebVelocity{0-600};
+    
+    // animation frame
+    int frame{};        // initializing to 0
+    // time based animation
+    const float updateTime = 1.0/12.0;  // amount of time before we update animation frame
+    float runningTime{};
 
 
-    // is the rectangle in the air
+    // is the character in the air
     bool isInAir{};
-    // jump velocity
-    const int jumpVelocity{-22};
+    // jump velocity (pixels/second(s))
+    const int jumpVelocity{-600};
 
     int velocity{0};
 
@@ -42,6 +59,11 @@ int main()
     SetTargetFPS(60);
     while ( !WindowShouldClose() )
     {
+
+        // delta time (time since last frame)
+        const float dT{GetFrameTime()};
+
+        // start drawing
         BeginDrawing();
         ClearBackground(WHITE);
         
@@ -63,7 +85,7 @@ int main()
             else
             {
                 // rectangle is in the air, apply gravity
-                velocity += gravity;
+                velocity += gravity * dT;
                 isInAir = true;
             }
 
@@ -74,19 +96,47 @@ int main()
                 velocity += jumpVelocity;
             }
 
+            //update nebula position
+            nebPos.x += nebVelocity * dT;
+
             // update position
-            scarfyPos.y += velocity;
+            scarfyPos.y += velocity * dT;
+
+            if ( !isInAir )
+            {
+                // update running time
+                runningTime += dT;
+                // check if running time has surpassed update time
+                if (runningTime >= updateTime)
+                {
+                    runningTime = 0.0;
+                    // update animation frame
+                    scarfyRect.x = frame * scarfyRect.width;
+                    frame++;
+                    if (frame > 5)
+                    {
+                        frame = 0;
+                    }
+                }
+            }
+
+            // draw nebular hazard
+            DrawTextureRec(nebula, nebRect, nebPos, WHITE);
 
             // draw scarfy
             DrawTextureRec(scarfy, scarfyRect, scarfyPos, WHITE);
 
+            // Basic UI/HUD
             DrawText("Level: 1", 10, 10, 20, BLUE);
 
             // Game Logic End
         }
 
+        // end drawing
         EndDrawing();
     }
+    // clean up after run and exit
     UnloadTexture(scarfy);
+    UnloadTexture(nebula);
     CloseWindow();
 }
