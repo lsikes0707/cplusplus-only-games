@@ -5,52 +5,104 @@
   * Summary: hopping side scroller, dodge the collisions
   * Author: Lacey (While sharpening my c++ skills with GameDev.tv)
 */
+struct AnimationData
+{
+    Rectangle rect;
+    Vector2 position;
+    int frame;
+    float updateTime;
+    float runningTime;
+};
+
+// function to return boolean whether or not something is on the ground
+bool isOnGround(AnimationData data, int windowHeight)
+{
+    return data.position.y >= windowHeight - data.rect.height;
+}
+// return AnimationData
+AnimationData updateAnimationData(AnimationData data, float deltaTime, int maxFrame)
+{
+    // update runningTime
+    data.runningTime += deltaTime;
+    if ( data.runningTime >= data.updateTime )
+    {
+        // reset runningTime to zero
+        data.runningTime = 0.0;
+        // update animation frame
+        data.rect.x = data.frame * data.rect.width;
+        data.frame++;
+        if ( data.frame > maxFrame )
+        {
+            data.frame = 0;
+        }
+    }
+    return data;
+}
+
 int main()
 {
     // window dimensions
-    const int windowWidth = 512;      // const variable will not change in the program
-    const int windowHeight = 380;     // I bet these have to do with the paralaxing image sizes
+    double windowDimensions[2];
+    windowDimensions[0] = 512;
+    windowDimensions[1] = 380;
     const char * windowTitle = "Lacey's Dapper Dasher!";
     // initialize the window
-    InitWindow(windowWidth, windowHeight, windowTitle);
+    InitWindow(windowDimensions[0], windowDimensions[1], windowTitle);
 
     // gravity, pixels/s per s
     const int gravity{1'000};
 
+    // array of colors
+    Color colors[13];    // should be at least as big as numOfNebulae
+    colors[0] = RAYWHITE;
+    colors[1] = YELLOW;
+    colors[2] = WHITE;
+    colors[3] = PINK;
+    colors[4] = GREEN;
+    colors[5] = ORANGE;
+    colors[6] = BLACK;
+    colors[7] = PURPLE;
+    colors[8] = BLUE;
+    colors[9] = RED;
+    colors[10] = DARKGRAY;
+    colors[11] = LIGHTGRAY;
+    colors[12] = GRAY;
+
     // texture 2D - scarfy player character
     Texture2D scarfy = LoadTexture("textures/scarfy.png");
-    Rectangle scarfyRect;       // access variables with .
-    scarfyRect.width = scarfy.width/6;
-    scarfyRect.height = scarfy.height;
-    scarfyRect.x = 0;
-    scarfyRect.y = 0;
-    Vector2 scarfyPos;          // access variables with .
-    scarfyPos.x = windowWidth/2 - scarfyRect.width/2;
-    scarfyPos.y = windowHeight - scarfyRect.height;
+    AnimationData scarfyData;
+    scarfyData.rect.width = scarfy.width/6;
+    scarfyData.rect.height = scarfy.height;
+    scarfyData.rect.x = 0;
+    scarfyData.rect.y = 0;
+    scarfyData.position.x = windowDimensions[0]/2 - scarfyData.rect.width/2;//windowWidth/2 - scarfyData.rect.width/2;
+    scarfyData.position.y = windowDimensions[1] - scarfyData.rect.height;//windowHeight - scarfyData.rect.height;
+    scarfyData.frame = 0;
+    scarfyData.updateTime = 1.0/12.0;
+    scarfyData.runningTime = 0.0;
 
     // texture 2D - nebula hazard
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
-    Rectangle nebRect;
-    nebRect.x = 0;
-    nebRect.y = 0;
-    nebRect.width = nebula.width/8;
-    nebRect.height = nebula.height/8;
-    Vector2 nebPos{windowWidth, windowHeight-nebRect.height};
+    // animationData for nebula
+    // array of type AnimationData
+    AnimationData nebulae[10]{};
+    int sizeOfNebulae = 10;
+    for ( int i=0; i<sizeOfNebulae; i++ )
+    {
+        nebulae[i].rect.x = 0.0;
+        nebulae[i].rect.y = 0.0;
+        nebulae[i].rect.width = nebula.width/8;
+        nebulae[i].rect.height = nebula.height/8;
+        nebulae[i].position.x = windowDimensions[0] + (i * 300);
+        nebulae[i].position.y = windowDimensions[1] - nebula.height/8;
+        nebulae[i].frame = 0;
+        nebulae[i].runningTime = 0.0;
+        nebulae[i].updateTime = 1.0/16.0;
+    }
+
     
     // nebula x velocity (pixels/second)
     int nebVelocity{-350};
-    // nebula animation variables
-    // current animation frame for nebula
-    int nebulaFrame{};
-    const float nebulaUpdateTime{1.0/12.0};
-    float nebulaRunningTime{};
-    
-    // animation frame
-    int frame{};        // initializing to 0
-    // time based animation
-    const float updateTime = 1.0/12.0;  // amount of time before we update animation frame
-    float runningTime{};
-
 
     // is the character in the air
     bool isInAir{};
@@ -58,8 +110,6 @@ int main()
     const int jumpVelocity{-600};
 
     int velocity{0};
-
-    bool collision_with_enemy{};
 
     SetTargetFPS(60);
     while ( !WindowShouldClose() )
@@ -72,86 +122,65 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
         
-        if ( collision_with_enemy )
+        
+        // Game Logic Start
+
+        // perform ground check
+        if ( isOnGround( scarfyData, windowDimensions[1] ) )
         {
-            DrawText("Game Over!", windowWidth/2, windowHeight/2, 20, RED);
+            // rectangle is on the ground
+            velocity = 0;
+            isInAir = false;
         }
         else
         {
-            // Game Logic Start
-
-            // perform ground check
-            if ( scarfyPos.y >= (windowHeight - scarfyRect.height) )
-            {
-                // rectangle is on the ground
-                velocity = 0;
-                isInAir = false;
-            }
-            else
-            {
-                // rectangle is in the air, apply gravity
-                velocity += gravity * dT;
-                isInAir = true;
-            }
-
-            // adding jump with SPACE logic and jump check
-            if ( IsKeyPressed(KEY_SPACE) && !isInAir )
-            {
-                // add jumpVelocity to the velocity
-                velocity += jumpVelocity;
-            }
-
-            //update nebula position
-            nebPos.x += nebVelocity * dT;
-
-            // update position
-            scarfyPos.y += velocity * dT;
-
-            // update scarfy animation 
-            if ( !isInAir )
-            {
-                // update running time
-                runningTime += dT;
-                // check if running time has surpassed update time
-                if (runningTime >= updateTime)
-                {
-                    runningTime = 0.0;
-                    // update animation frame
-                    scarfyRect.x = frame * scarfyRect.width;
-                    frame++;
-                    if (frame > 5)
-                    {
-                        frame = 0;
-                    }
-                }
-            }
-
-            // update nebula animation frame
-            nebulaRunningTime += dT;
-            if ( nebulaRunningTime >= nebulaUpdateTime )
-            {
-                // time to update the nebula  animation frame
-                nebulaRunningTime = 0.0;
-                nebRect.x = nebulaFrame * nebRect.width;
-                nebulaFrame++;
-                // check if the frame has maxed out and reset
-                if ( nebulaFrame > 7 )
-                {
-                    nebulaFrame = 0;
-                }
-            }
-
-            // draw nebular hazard
-            DrawTextureRec(nebula, nebRect, nebPos, WHITE);
-
-            // draw scarfy
-            DrawTextureRec(scarfy, scarfyRect, scarfyPos, WHITE);
-
-            // Basic UI/HUD
-            DrawText("Level: 1", 10, 10, 20, BLUE);
-
-            // Game Logic End
+            // rectangle is in the air, apply gravity
+            velocity += gravity * dT;
+            isInAir = true;
         }
+
+        // adding jump with SPACE logic and jump check
+        if ( IsKeyPressed(KEY_SPACE) && !isInAir )
+        {
+            // add jumpVelocity to the velocity
+            velocity += jumpVelocity;
+        }
+
+
+        for ( int i=0; i<sizeOfNebulae; i++ )
+        {
+            // update nebulae position(position of each nebaula)
+            nebulae[i].position.x += nebVelocity * dT;
+        }
+
+        // update position
+        scarfyData.position.y += velocity * dT;
+
+        // update scarfy animation 
+        if ( !isInAir )
+        {
+            scarfyData = updateAnimationData(scarfyData, dT, 5);
+        }
+
+        // for loop to update the animation frame for nebulae
+        for ( int i=0; i<sizeOfNebulae; i++ )
+        {
+            nebulae[i] = updateAnimationData(nebulae[i], dT, 7);
+        }
+
+        // draw nebulae hazards
+        for ( int i=0; i<sizeOfNebulae; i++ )
+        {
+            DrawTextureRec(nebula, nebulae[i].rect, nebulae[i].position, colors[i]);
+        }
+        // draw scarfy
+        DrawTextureRec(scarfy, scarfyData.rect, scarfyData.position, WHITE);
+
+        // Basic UI/HUD
+        DrawText("Level: 1", 10, 10, 20, BLUE);
+
+        // Game Logic End
+        
 
         // end drawing
         EndDrawing();
