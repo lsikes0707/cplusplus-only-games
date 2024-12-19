@@ -1,8 +1,8 @@
 
 |     **Axe Game**     |  **Dapper Dasher**   |  **Classy Clash**   |
 | -------------------- | -------------------- | ------------------- |
-|  [Axe Game Video v1.0](#axe-game-video)   |  [Dapper Dasher Video-Coming Soon](#dapper-dasher-video)   |   [Classy Clash Video-Coming Soon](#classy-clash-video)  |
-| [Axe Game Details v1.0](#axe-game-video)  | [Details Coming Soon](#dapper-dasher-video)  | [Details Coming Soon](#classy-clash-video) |
+|  [Axe Game Video](#axe-game-video)   |  [Dapper Dasher Video](#dapper-dasher-video)   |   [Classy Clash Video-Coming Soon](#classy-clash-video)  |
+| [Axe Game Details](#axe-game-video)  | [Dapper Dasher Game Details](#dapper-dasher-video)  | [Details Coming Soon](#classy-clash-video) |
  
 
 
