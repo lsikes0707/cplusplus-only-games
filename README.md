@@ -23,7 +23,11 @@ https://github.com/user-attachments/assets/0268a3ca-23f7-4568-9a14-b18d1a03c252
 - Collision detection
 - Trash clean up
 ```
-Win or Lose
+You Win
+
+https://github.com/user-attachments/assets/e9e07b2f-a283-4bc3-ab51-a5c167d19d68
+
+Game Over
 
 https://github.com/user-attachments/assets/1f0f9616-fa48-457b-aeb2-7c27cde17c60
 
@@ -37,3 +41,6 @@ https://github.com/user-attachments/assets/1f0f9616-fa48-457b-aeb2-7c27cde17c60
 
 # c++ only games
  Games created with c++ with guidance and learning provided by GameDev.tv
+ # Too play
+ I used Visual Studio Code, but any c++ editor platform of your choiuce should work. Standard c++ libraries and Raylib used.
+
