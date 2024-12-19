@@ -111,6 +111,13 @@ int main()
 
     int velocity{0};
 
+    Texture2D background = LoadTexture("textures/far-buildings.png");
+    Texture2D midGround = LoadTexture("textures/back-buildings.png");
+    Texture2D foreGround = LoadTexture("textures/foreground.png");
+    float bgX{};
+    float mgX{};
+    float fgX{};
+
     SetTargetFPS(60);
     while ( !WindowShouldClose() )
     {
@@ -121,9 +128,44 @@ int main()
         // start drawing
         BeginDrawing();
         ClearBackground(WHITE);
+
+        // scroll the background
+        bgX -= 20 * dT;
+        if (bgX <= -background.width*2)
+        {
+            bgX = 0.0;
+        }
+        // scroll the midground
+        mgX -= 40 * dT;
+        if (mgX <= -midGround.width*2)
+        {
+            mgX = 0.0;
+        }
+        // scroll the foreground
+        fgX -= 80 * dT;
+        if (fgX <= -foreGround.width*2)
+        {
+            fgX = 0.0;
+        }
         
+        // draw the background
+        Vector2 bg1Position{bgX, 0.0};
+        DrawTextureEx(background, bg1Position, 0.0, 2.0, WHITE);
+        Vector2 bg2Position{bgX + background.width*2, 0.0};
+        DrawTextureEx(background, bg2Position, 0.0, 2.0, WHITE);
+
+        // draw midGround
+        Vector2 mgPosition{mgX, 0.0};
+        DrawTextureEx(midGround, mgPosition, 0.0, 2.0, WHITE);
+        Vector2 mg2Position{mgX + midGround.width*2, 0.0};
+        DrawTextureEx(midGround, mg2Position, 0.0, 2.0, WHITE);
+
+        // draw foreGround
+        Vector2 fgPosition{fgX, 0.0};
+        DrawTextureEx(foreGround, fgPosition, 0.0, 2.0, WHITE);
+        Vector2 fg2Position{fgX + foreGround.width*2, 0.0};
+        DrawTextureEx(foreGround, fg2Position, 0.0, 2.0, WHITE);
         
-        // Game Logic Start
 
         // perform ground check
         if ( isOnGround( scarfyData, windowDimensions[1] ) )
@@ -188,5 +230,8 @@ int main()
     // clean up after run and exit
     UnloadTexture(scarfy);
     UnloadTexture(nebula);
+    UnloadTexture(background);
+    UnloadTexture(midGround);
+    UnloadTexture(foreGround);
     CloseWindow();
 }
