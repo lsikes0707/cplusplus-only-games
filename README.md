@@ -1,8 +1,8 @@
 
 |     **Axe Game**     |  **Dapper Dasher**   |  **Classy Clash**   |
 | -------------------- | -------------------- | ------------------- |
-|  [Axe Game Video v1.0](#axe-game-video)   |  [Dapper Dasher Video-Coming Soon](#dapper-dasher-video)   |   [Classy Clash Video-Coming Soon](#classy-clash-video)  |
-| [Axe Game Details v1.0](#axe-game-video)  | [Details Coming Soon](#dapper-dasher-video)  | [Details Coming Soon](#classy-clash-video) |
+|  [Axe Game Video](#axe-game-video)   |  [Dapper Dasher Video](#dapper-dasher-video)   |   [Classy Clash Video-Coming Soon](#classy-clash-video)  |
+| [Axe Game Details](#axe-game-video)  | [Dapper Dasher Game Details](#dapper-dasher-video)  | [Details Coming Soon](#classy-clash-video) |
  
 
 
@@ -17,10 +17,21 @@
 
 https://github.com/user-attachments/assets/0268a3ca-23f7-4568-9a14-b18d1a03c252
 
-<a name="dapper-dasher-video">Dapper Dasher - Coming Soon</a>
+<a name="dapper-dasher-video">Dapper Dasher</a>
 ```
-- Details to come.
+- Paralaxing background
+- Collision detection
+- Trash clean up
 ```
+You Win
+
+https://github.com/user-attachments/assets/e9e07b2f-a283-4bc3-ab51-a5c167d19d68
+
+Game Over
+
+https://github.com/user-attachments/assets/1f0f9616-fa48-457b-aeb2-7c27cde17c60
+
+
 
 <a name="classy-clash-video">Classy Clash - Coming Soon</a>
 ```
@@ -30,3 +41,6 @@ https://github.com/user-attachments/assets/0268a3ca-23f7-4568-9a14-b18d1a03c252
 
 # c++ only games
  Games created with c++ with guidance and learning provided by GameDev.tv
+ # Too play
+ I used Visual Studio Code, but any c++ editor platform of your choiuce should work. Standard c++ libraries and Raylib used.
+
