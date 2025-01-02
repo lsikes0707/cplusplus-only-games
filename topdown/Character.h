@@ -4,10 +4,10 @@
 class Character
 {
 public:
-    Character();
+    Character(
+        int winWidth,
+        int winHeight);
     Vector2 getWorldPosition() { return worldPosition; }
-    // getter method
-    void setScreenPosition(int winWidth, int winHeight);
     void tick(float deltaTime);
     void undoMovement();
     
@@ -26,7 +26,8 @@ private:
     int frame{};
     int maxFrames{6};
     float updateTime{1.f/12.f};   // update 12 times per second
-    float speed{4.f};
+    float speed{8.f};
     float width{};
     float height{};
+    float scale{4.0f};
 };

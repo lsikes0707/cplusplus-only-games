@@ -25,8 +25,7 @@ int main()
     const float mapScale{4.f};
 
     // create a variable of type Character
-    Character player;
-    player.setScreenPosition(windowWidth, windowHeight);
+    Character player{windowWidth, windowHeight};
 
     SetTargetFPS(60);
     while (!WindowShouldClose())

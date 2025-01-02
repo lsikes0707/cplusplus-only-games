@@ -1,21 +1,17 @@
 #include "Character.h"
 #include "raymath.h"
 
-Character::Character()
+Character::Character(int winWidth, int winHeight)
 {
     width = texture.width / maxFrames;
     height = texture.height;
-}
 
-
-void Character::setScreenPosition(int winWidth, int winHeight) // fully qualifying the function
-{
-    // define the function outside the Character class
     screenPosition = {
-        (float)winWidth/2.0f - 4.0f * (0.5f * width),    // c-style cast
-        (float)winHeight/2.0f - 4.0f * (0.5f * height)
+        static_cast<float>(winWidth)/2.0f - scale * (0.5f * width),    // c++ function for static cast to check for incompatible types (unlike c-style cast which doesn't check)
+        static_cast<float>(winHeight)/2.0f - scale * (0.5f * height)
     };
 }
+
 
 void Character::tick(float deltaTime)
 {
@@ -49,7 +45,7 @@ void Character::tick(float deltaTime)
 
     // draw the player
     Rectangle source{frame * width, 0.f, rightLeft * width, height};
-    Rectangle dest{screenPosition.x, screenPosition.y, 2.0f * width, 2.0f * height};
+    Rectangle dest{screenPosition.x, screenPosition.y, scale * width, scale * height};
     Vector2 origin{};
     DrawTexturePro(texture, source, dest, origin, 0.f, WHITE);
 }
