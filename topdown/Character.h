@@ -1,13 +1,15 @@
 #include "raylib.h"
-#include "raymath.h"
 
 // Character class
 class Character
 {
 public:
-    Vector2 getWorldPosition() { return worldPosition; }    // getter method
+    Character();
+    Vector2 getWorldPosition() { return worldPosition; }
+    // getter method
     void setScreenPosition(int winWidth, int winHeight);
     void tick(float deltaTime);
+    void undoMovement();
     
 private:
     // Character members
@@ -16,6 +18,7 @@ private:
     Texture2D run{LoadTexture("characters/knight_run_spritesheet.png")};;
     Vector2 screenPosition{};
     Vector2 worldPosition{};
+    Vector2 worldPositionLastFrame{};
     // 1: facing right, -1: facing left
     float rightLeft{1.f};
     // animation variables

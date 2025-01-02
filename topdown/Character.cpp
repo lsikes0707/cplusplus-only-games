@@ -1,10 +1,12 @@
 #include "Character.h"
+#include "raymath.h"
 
 Character::Character()
 {
     width = texture.width / maxFrames;
     height = texture.height;
 }
+
 
 void Character::setScreenPosition(int winWidth, int winHeight) // fully qualifying the function
 {
@@ -17,6 +19,8 @@ void Character::setScreenPosition(int winWidth, int winHeight) // fully qualifyi
 
 void Character::tick(float deltaTime)
 {
+    worldPositionLastFrame = worldPosition;
+
     Vector2 direction{};
     if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)) { direction.x -= 1.0; }   // move direction left
     if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) { direction.x += 1.0; }   // move direction right
@@ -48,4 +52,9 @@ void Character::tick(float deltaTime)
     Rectangle dest{screenPosition.x, screenPosition.y, 2.0f * width, 2.0f * height};
     Vector2 origin{};
     DrawTexturePro(texture, source, dest, origin, 0.f, WHITE);
+}
+
+void Character::undoMovement()
+{
+    worldPosition = worldPositionLastFrame;
 }

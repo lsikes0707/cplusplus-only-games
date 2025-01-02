@@ -20,8 +20,9 @@ int main()
     InitWindow(windowWidth, windowHeight, windowTitle);
 
     // load the map texture
-    Texture2D map = LoadTexture("nature_tileset/WorldMap.png");
+    Texture2D map = LoadTexture("nature_tileset/OpenWorldMap24x24.png");
     Vector2 mapPosition{0.0, 0.0};
+    const float mapScale{4.f};
 
     // create a variable of type Character
     Character player;
@@ -36,8 +37,16 @@ int main()
         mapPosition = Vector2Scale(player.getWorldPosition(), -1.f);
 
         // draw the map with DrawTextureEx() and the player
-        DrawTextureEx(map, mapPosition, 0.0, 1.0, WHITE);
+        DrawTextureEx(map, mapPosition, 0.0, mapScale, WHITE);
         player.tick(GetFrameTime());
+        // hitting the map bounds, check map bounds, stop movement
+        if (player.getWorldPosition().x < 0.f ||
+            player.getWorldPosition().y < 0.f ||
+            player.getWorldPosition().x + windowWidth > map.width * mapScale ||
+            player.getWorldPosition().y + windowHeight > map.height * mapScale)
+        {
+            player.undoMovement();
+        }
 
         EndDrawing();
 
